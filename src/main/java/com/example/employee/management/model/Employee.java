@@ -1,7 +1,5 @@
 package com.example.employee.management.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +23,6 @@ public class Employee {
     private String email;
 
     private String position;
-
 
 
 }

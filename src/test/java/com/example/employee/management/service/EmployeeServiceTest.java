@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class EmployeeServiceTest {
@@ -45,24 +46,22 @@ public class EmployeeServiceTest {
         employeeService = new EmployeeService(employeeRepository, modelMapper);
     }
     @Test
-
-    void testAddEmployee(){
-
-        EmployeeRequest request = new EmployeeRequest("Anu","sajan","wdfgh@email.com","1");
-
-
-        Employee employee = modelMapper.map(request, Employee.class);
-
-        EmployeeResponse expectedResponse = modelMapper.map(employee, EmployeeResponse.class);
-
-
-
-        when(employeeRepository.save(any())).thenReturn(employee);
-
-        EmployeeResponse actualResponse = employeeService.addEmployee(request);
-
-        assertEquals(expectedResponse, actualResponse);
-
+    void testAddEmployee() {
+        when(employeeRepository.save(Mockito.<Employee>any())).thenReturn(Employee.builder()
+                .email("jane.doe@example.org")
+                .firstName("Jane")
+                .id(1L)
+                .lastName("Doe")
+                .position("Position")
+                .build());
+        EmployeeResponse actualAddEmployeeResult = employeeService
+                .addEmployee(new EmployeeRequest("Jane", "Doe", "jane.doe@example.org", "Position"));
+        verify(employeeRepository).save(Mockito.<Employee>any());
+        assertEquals("Doe", actualAddEmployeeResult.getLastName());
+        assertEquals("Jane", actualAddEmployeeResult.getFirstName());
+        assertEquals("Position", actualAddEmployeeResult.getPosition());
+        assertEquals("jane.doe@example.org", actualAddEmployeeResult.getEmail());
+        assertEquals(1L, actualAddEmployeeResult.getId());
     }
     @Test
     void testUpdateEmployeeById() {
